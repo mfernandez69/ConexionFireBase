@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ConexionFireBase</string>
+    <string name="descripcion_curso_python">Curso de Python:Aprende a programar en python 3</string>
+    <string name="descripcion_curso_kotlin">Curso de Kotlin:Aprende kotlin usando compose</string>
+    <string name="descripcion_curso_react">Curso de React:Introducción al framework más famoso</string>
+    <string name="descripcion_curso_fireBase">Taller de Firebase:Aprende como conectar tu proyecto android</string>
+</resources>
