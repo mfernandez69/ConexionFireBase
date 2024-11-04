@@ -16,16 +16,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -56,9 +60,12 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.input.KeyboardType
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,13 +104,12 @@ fun PantallaPerfil(navController: NavHostController) {
             )
         }
     ) { innerPadding ->
-        CuerpoPaginaPerfil(innerPadding)
+        CuerpoPaginaPerfil(innerPadding,navController)
     }
 }
 
 @Composable
-fun CuerpoPaginaPerfil(innerPadding: PaddingValues) {
-
+fun CuerpoPaginaPerfil(innerPadding: PaddingValues,navController: NavHostController) {
     Column(
         modifier = Modifier
             .background(
@@ -115,8 +121,8 @@ fun CuerpoPaginaPerfil(innerPadding: PaddingValues) {
                 )
             )
             .fillMaxSize()
-            .padding(16.dp)
-            .padding(8.dp),
+            .padding(innerPadding)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -140,10 +146,95 @@ fun CuerpoPaginaPerfil(innerPadding: PaddingValues) {
             )
             FormularioPerfil()
         }
+        FormEliminarPerfil(navController)
+    }
+}
+@Composable
+fun FormEliminarPerfil(navController: NavHostController) {
+// Declarar el ViewModel dentro de la función composable
+    val viewModel: TuViewModel = viewModel()
+    var mostrarConfirmacion by remember { mutableStateOf(false) }
+    var mostrarDialogoPassword by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .background(Color.Black),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        if (!mostrarConfirmacion) {
+            Button(onClick = { mostrarConfirmacion = true }) {
+                Text("Eliminar Perfil")
+            }
+        } else {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = {
+                        mostrarDialogoPassword = true
+                    },
+                ) {
+                    Text("Confirmar")
+                }
+                Button(
+                    onClick = { mostrarConfirmacion = false }
+                ) {
+                    Text("Cancelar")
+                }
+            }
+        }
+    }
+
+    if (mostrarDialogoPassword) {
+        ObtenerContraseñaDelUsuario(
+            onPasswordEntered = { password ->
+                viewModel.eliminarUsuario(password,navController)
+                mostrarDialogoPassword = false
+                mostrarConfirmacion = false
+            },
+            onDismiss = {
+                mostrarDialogoPassword = false
+            }
+        )
     }
 }
 
+@Composable
+fun ObtenerContraseñaDelUsuario(
+    onPasswordEntered: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var password by remember { mutableStateOf("") }
 
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Ingrese su contraseña") },
+        text = {
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+            )
+        },
+        confirmButton = {
+            Button(onClick = { onPasswordEntered(password) }) {
+                Text("Confirmar")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) {
+                Text("Cancelar")
+            }
+        }
+    )
+}
 
 @Composable
 fun FormularioPerfil() {

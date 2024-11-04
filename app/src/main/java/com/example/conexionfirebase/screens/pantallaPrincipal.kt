@@ -28,11 +28,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,7 +46,6 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.getValue
@@ -66,7 +63,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.draw.shadow
 import kotlinx.coroutines.launch
 
 
@@ -83,7 +79,7 @@ fun PantallaPrincipal(navController: NavHostController) {
     // Añadimos variables para el menu lateral principal
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
 
     // Creamos una lista de opciones para el menu usando la clase NavigationItem
     val items = listOf(
@@ -299,25 +295,25 @@ fun CuerpoDeLaPagina(innerPadding: PaddingValues) {
         )
         {
             TarjetaCurso(
-                image = painterResource(R.drawable.lineiconspython),
+                image = painterResource(R.drawable.imgpython),
                 descripcionCruso = stringResource(R.string.descripcion_curso_python),
                 tipoCurso = "Curso",
                 porcentaje = 23
             )
             TarjetaCurso(
-                image = painterResource(R.drawable.cibkotlin),
+                image = painterResource(R.drawable.imgkotlin),
                 descripcionCruso = stringResource(R.string.descripcion_curso_kotlin),
                 tipoCurso = "Curso",
                 porcentaje = 56
             )
             TarjetaCurso(
-                image = painterResource(R.drawable.uilreact),
+                image = painterResource(R.drawable.imgreact),
                 descripcionCruso = stringResource(R.string.descripcion_curso_react),
                 tipoCurso = "Curso",
                 porcentaje = 80
             )
             TarjetaCurso(
-                image = painterResource(R.drawable.fileiconsfirebase),
+                image = painterResource(R.drawable.imgfirebase),
                 descripcionCruso = stringResource(R.string.descripcion_curso_fireBase),
                 tipoCurso = "Taller",
                 porcentaje = 90
@@ -422,7 +418,7 @@ fun BarraPorcentaje(porcentaje: Int) {
 
     }
     Text(
-        text = "${porcentaje.toString()}%",
+        text = "${porcentaje}%",
         color = Color.White
     )
     Box(
