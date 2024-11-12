@@ -166,7 +166,12 @@ fun FormEliminarPerfil(navController: NavHostController) {
         verticalArrangement = Arrangement.SpaceAround
     ) {
         if (!mostrarConfirmacion) {
-            Button(onClick = { mostrarConfirmacion = true }) {
+            Button(
+                onClick = { mostrarConfirmacion = true },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF30C67C),
+                    contentColor = Color.White
+                )) {
                 Text("Eliminar Perfil")
             }
         } else {
@@ -178,11 +183,19 @@ fun FormEliminarPerfil(navController: NavHostController) {
                     onClick = {
                         mostrarDialogoPassword = true
                     },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF30C67C),
+                        contentColor = Color.White
+                    )
                 ) {
                     Text("Confirmar")
                 }
                 Button(
-                    onClick = { mostrarConfirmacion = false }
+                    onClick = { mostrarConfirmacion = false },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF30C67C),
+                        contentColor = Color.White
+                    )
                 ) {
                     Text("Cancelar")
                 }
